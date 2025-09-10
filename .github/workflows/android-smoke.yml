@@ -35,11 +35,19 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Install Appium + UiAutomator2
+      - name: Ensure Appium + UiAutomator2
+        shell: bash
         run: |
-          npm i -g appium
-          appium -v
-          appium driver install uiautomator2
+            set -e
+            npm i -g appium
+            appium -v
+            # Only install if missing; otherwise continue
+            if ! appium driver list --installed | grep -q uiautomator2; then
+            appium driver install uiautomator2
+            else
+            echo "uiautomator2 already installed ✓"
+            # optional: appium driver update uiautomator2 || true
+            fi
 
       # If your APK is in the repo at apps/android/tes10.apk, nothing else to do.
       # If you host it elsewhere, set APP_PATH to that absolute path after you download it.
