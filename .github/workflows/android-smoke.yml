@@ -1,0 +1,62 @@
+name: Android Smoke (Appium + WDIO)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  android-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    env:
+      AVD_NAME: Pixel_5                      # passed to WDIO config (see step 1)
+      NODE_ENV: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Use Java 17 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Install Appium + UiAutomator2
+        run: |
+          npm i -g appium
+          appium -v
+          appium driver install uiautomator2
+
+      # If your APK is in the repo at apps/android/tes10.apk, nothing else to do.
+      # If you host it elsewhere, set APP_PATH to that absolute path after you download it.
+
+      - name: Boot emulator & run smoke
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34                  # Android 14 (stable for Appium)
+          target: google_apis
+          arch: x86_64
+          profile: pixel_5
+          avd-name: ${{ env.AVD_NAME }}
+          force-avd-creation: true
+          disable-animations: true
+          emulator-boot-timeout: 1200
+          script: |
+            # Optionally point to a different APK location at runtime:
+            # export APP_PATH="$GITHUB_WORKSPACE/apps/android/tes10.apk"
+            npm run android.app -- --spec=tests/specs/lebara.smoke.spec.ts
+          emulator-options: -no-snapshot -no-window -no-boot-anim -camera-back none -camera-front none
