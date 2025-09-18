@@ -45,7 +45,14 @@
         "ios.browser": "wdio run config/wdio.ios.browser.conf.ts",
         "ios.lt.browser.simulator": "wdio run config/lambdatest/wdio.ios.simulator.browser.conf.ts",
         "ios.lt.browser.realdevice": "wdio run config/lambdatest/wdio.ios.realdevice.browser.conf.ts",
-        "lint": "eslint config tests"
+        "lint": "eslint config tests",
+        "test:all": "wdio run ./config/wdio.apidemos.conf.ts",
+        "test:scroll": "wdio run ./config/wdio.apidemos.conf.ts --suite scroll_webview",
+        "test:tabs": "wdio run ./config/wdio.apidemos.conf.ts --suite tabs_swipe",
+        "test:gestures": "wdio run ./config/wdio.apidemos.conf.ts --suite gestures_all",
+        "test:saucelabs": "wdio run ./config/wdio.apidemos.conf.ts --suite saucelabs_all",
+         "test:dragdrop": "wdio run ./config/wdio.android.app.conf.ts --spec ./tests/specs/apidemos/02.dragdrop.e2e.ts",
+        "test:smoke": "wdio run ./config/wdio.apidemos.conf.ts --suite smoke"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^8.21.0",
@@ -60,8 +67,8 @@
         "@wdio/sauce-service": "^9.7.1",
         "@wdio/spec-reporter": "^9.6.3",
         "@wdio/testingbot-service": "^9.7.1",
-        "appium": "^2.15.0",
-        "appium-uiautomator2-driver": "^3.10.0",
+        "appium": "^3.0.2",
+        "appium-uiautomator2-driver": "^5.0.1",
         "appium-xcuitest-driver": "8.1.0",
         "eslint-plugin-wdio": "^9.6.0",
         "ts-node": "^10.9.2",

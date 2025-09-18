@@ -37,7 +37,6 @@ export const config: Options.Testrunner = {
     /**
      * NOTE: This is just a place holder and will be overwritten by each specific configuration
      */
-    capabilities: [],
     //
     // ===================
     // Test Configurations
